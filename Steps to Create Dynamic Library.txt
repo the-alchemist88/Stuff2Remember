@@ -1,0 +1,74 @@
+Assuming that you have files main.c, fun1.c(implementation of fun1 function), fun2.c(implementation of fun2 function) in a folder named Sources,
+and file fun.h inside a folder named Headers(also inside Sources).
+
+fun1.c:
+------------------
+#include <stdio.h>
+#include "fun2.h"
+
+void fun1(void){
+	printf("fun name= %s\n", __FUNCTION__);
+	fun2();
+}
+
+fun2.c
+------------------
+#include <stdio.h>
+
+void fun2(void){
+	printf("fun name= %s\n", __FUNCTION__);
+}
+
+main.c
+------------------
+#include <stdio.h>
+#include "fun1.h"
+#include "fun2.h"
+
+
+int main(){
+	fun1();
+	fun2();
+	return 0;
+}
+
+Steps
+------------------
+
+1) Generate objects of dynamic library
+
+gcc -c -fPIC fun1.c -I./Headers -shared -o fun1.o 
+gcc -c -fPIC fun2.c -I./Headers -shared -o fun2.o
+
+2) Bundle the object files to create a common shared object(libfun.so)
+
+gcc fun1.o fun2.o -shared -o libfun.so
+
+3) Compile until linking phase
+
+gcc -c main.c -I./Headers -o main.o
+
+4) Link with shared object to create final executable(main)."-L" option shows the path and "-l" option indicates the name of library(omit the lib prefix and .so postfix from the name)
+
+gcc main.o -L. -lfun -o main
+
+5) There are two options to place the shared object in Linux:
+
+Either do:
+
+sudo cp libfun.so /usr/lib --> place the shared object to system dynamic library path
+
+or:
+
+export LD_LIBRARY_PATH:=<absolute path to shared object>
+
+6) Finally you can run your executable
+./main
+
+Output:
+fun name= fun1
+fun name= fun2
+fun name= fun2
+
+
+Note: "ldd main" will show dependency library of main 
