@@ -1,0 +1,22 @@
+First-time-installer(VM) must have features:
+
+1-Install guest editions(for screen optimizations)
+2-Create shared folder in VM settings
+3-Add yourself to the vboxsf group within the guest VM with this command to set shared folder permissions:
+	sudo adduser $USER vboxsf
+4-To be able to copy file paths manually run this command(shortcut Ctrl+l):
+	gsettings set org.gnome.nautilus.preferences always-use-location-entry true
+To revert it run this command:
+	gsettings reset org.gnome.nautilus.preferences always-use-location-entry true
+5-To add "New Document" option on right-click pop-up menu
+	- Click on Activities > Type "Text" > Click on Text Editor > choose a name and save it into template directory
+6-Download rmtrash .. tool and add it path of commands(as an alternative for rm command--too dangerous since cannot bring back the files that are deleted accidentally)
+
+	sudo apt install trash-cli
+	download rmtrash/rmdirtrash utility from github
+	copy rmtrash and rmdirtrash to /usr/local/bin/
+	change the permissions by running:
+		sudo chmod 755 rmtrash rmdirtrash
+	add ~/.bash_aliases file these alises:
+		alias rm="echo please use 'rmtrash' "
+		alias rmdir="echo please use 'rmdirtrash' "
